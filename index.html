@@ -2,18 +2,20 @@
 <html lang="zh-TW">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>豆子氣象站 · Space HUD</title>
-    <link rel="icon" type="image/png" href="./icon.png">
-    <link rel="apple-touch-icon" href="./icon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>豆子氣象站 · Space HUD</title>
+  <link rel="icon" type="image/png" href="./icon.png">
+  <link rel="apple-touch-icon" href="./icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
+  <link rel="apple-touch-icon" href="./icon-v2.png">
 
-
-    <link rel="apple-touch-icon" href="./icon-v2.png">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
+    rel="stylesheet">
 
   <style>
     :root {
@@ -38,43 +40,42 @@
       font-family: 'Zen Maru Gothic', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    /* === 背景：星雲 + HUD 網格 === */
+    /* === 背景：星雲 === */
     body {
       background-color: var(--purple-deep);
-
-        background-image:
-            radial-gradient(circle at 20% 30%, rgba(255,182,193,0.18) 0%, transparent 60%),
-            radial-gradient(circle at 80% 20%, rgba(173,216,230,0.22) 0%, transparent 65%),
-            radial-gradient(circle at 50% 75%, rgba(221,160,221,0.20) 0%, transparent 60%),
-            radial-gradient(circle at 70% 60%, rgba(255,228,181,0.18) 0%, transparent 60%),
-            url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><circle cx='30' cy='40' r='1.8' fill='white' opacity='0.65'/><circle cx='120' cy='70' r='1.4' fill='white' opacity='0.55'/><circle cx='200' cy='110' r='1.6' fill='white' opacity='0.60'/><circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/><circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/></svg>");
-
-        background-size: cover, cover, cover, cover, 240px 240px;
-        background-repeat: repeat;
-        background-attachment: fixed;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.18) 0%, transparent 60%),
+        radial-gradient(circle at 80% 20%, rgba(173, 216, 230, 0.22) 0%, transparent 65%),
+        radial-gradient(circle at 50% 75%, rgba(221, 160, 221, 0.20) 0%, transparent 60%),
+        radial-gradient(circle at 70% 60%, rgba(255, 228, 181, 0.18) 0%, transparent 60%),
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><circle cx='30' cy='40' r='1.8' fill='white' opacity='0.65'/><circle cx='120' cy='70' r='1.4' fill='white' opacity='0.55'/><circle cx='200' cy='110' r='1.6' fill='white' opacity='0.60'/><circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/><circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/></svg>");
+      background-size: cover, cover, cover, cover, 240px 240px;
+      background-repeat: repeat;
+      background-attachment: fixed;
     }
 
-    /* 前景 HUD 格線 ＋ 星塵層 */
+    /* 前景星塵層 */
     .star-layer {
-  pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 0;
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><circle cx='30' cy='40' r='1.7' fill='white' opacity='0.75'/><circle cx='120' cy='80' r='1.3' fill='white' opacity='0.55'/><circle cx='200' cy='120' r='1.5' fill='white' opacity='0.60'/><circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/><circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/><circle cx='180' cy='30' r='1.2' fill='white' opacity='0.50'/></svg>");
+      background-size: 240px 240px;
+      background-repeat: repeat;
+      opacity: 0.45;
+      animation: star-drift 48s linear infinite;
+    }
 
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><circle cx='30' cy='40' r='1.7' fill='white' opacity='0.75'/><circle cx='120' cy='80' r='1.3' fill='white' opacity='0.55'/><circle cx='200' cy='120' r='1.5' fill='white' opacity='0.60'/><circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/><circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/><circle cx='180' cy='30' r='1.2' fill='white' opacity='0.50'/></svg>");
+    @keyframes star-drift {
+      0% {
+        background-position: 0 0;
+      }
 
-  background-size: 240px 240px;
-  background-repeat: repeat;
-
-     opacity: 0.45;
-  animation: star-drift 48s linear infinite;
-}
-
-@keyframes star-drift {
-  0% { background-position: 0 0; }
-  100% { background-position: 240px 240px; }
-}
-
+      100% {
+        background-position: 240px 240px;
+      }
+    }
 
     /* === 太空 Loading === */
     .loading-screen {
@@ -85,7 +86,8 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05) 0, transparent 55%),
+      background:
+        radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05) 0, transparent 55%),
         radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.06) 0, transparent 60%),
         #060814dd;
       backdrop-filter: blur(8px);
@@ -177,10 +179,84 @@
       margin: 0 auto;
     }
 
+    /* === 城市切換：桌機 Tabs + 手機 Select === */
+    .city-switcher {
+      display: flex;
+  justify-content: center;
+  margin: 16px 0 24px;
+    }
+
+    /* 桌機：Segment Tabs */
+    .city-tabs {
+      display: inline-flex;
+        padding: 6px;
+        border-radius: 30px;
+        background: rgba(5, 7, 16, 0.8);
+        border: 1px solid rgba(190, 207, 255, 0.5);
+        gap: 6px;
+        box-shadow:
+            0 0 12px rgba(120,160,255,0.4),
+            0 10px 25px rgba(0,0,0,0.65);
+    }
+
+    .city-tab {
+      border: none;
+      background: transparent;
+      color: var(--text-dim);
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.18s ease-out;
+    }
+
+    .city-tab:hover {
+      color: #ffffff;
+    }
+
+    .city-tab.active {
+      background: radial-gradient(circle at 20% 0%, #fff7d4, #ffd2f0);
+      color: #2b2330;
+      box-shadow:
+        0 0 12px rgba(255, 244, 210, 0.9),
+        0 0 26px rgba(255, 190, 230, 0.9);
+    }
+
+    /* 手機：下拉選單 */
+    .city-select-wrap {
+      display: none;
+      width: 100%;
+    }
+
+    .city-select-label {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .city-select {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(190, 207, 255, 0.7);
+      background: rgba(6, 10, 25, 0.9);
+      color: var(--text-light);
+      font-size: 0.9rem;
+      outline: none;
+      box-shadow:
+        0 0 12px rgba(120, 160, 255, 0.4),
+        0 8px 18px rgba(0, 0, 0, 0.7);
+    }
+
     /* === HUD 主卡片 === */
     .hero-card {
       position: relative;
-      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
         radial-gradient(circle at 80% 100%, rgba(144, 211, 255, 0.22), transparent 60%),
         var(--card-bg);
       border-radius: 28px;
@@ -190,11 +266,10 @@
       border: 1px solid var(--card-border);
       box-shadow:
         0 0 18px rgba(125, 175, 255, 0.30),
-    0 0 40px rgba(120, 80, 255, 0.28);
+        0 0 40px rgba(120, 80, 255, 0.28);
       overflow: hidden;
     }
 
-    /* 內部 HUD 線框 */
     .hero-card::before {
       content: "";
       position: absolute;
@@ -216,22 +291,22 @@
     }
 
     .hero-period {
-        position: absolute;
-        top: 28px;                  /* ⭐ 提高位置，避免被壓住 */
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--accent-yellow);
-        color: #3b3530;
-        padding: 4px 20px;
-        font-weight: 700;
-        border-radius: 16px;
-        font-size: 0.9rem;
-        border: 2px solid white;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.25),
-                    0 0 12px rgba(255,255,200,0.4);
-        z-index: 10;                 /* ⭐ 保證永遠在最上層 */
-        }
-
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-yellow);
+      color: #3b3530;
+      padding: 4px 20px;
+      font-weight: 700;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      border: 2px solid white;
+      box-shadow:
+        0 4px 15px rgba(0, 0, 0, 0.25),
+        0 0 12px rgba(255, 255, 200, 0.4);
+      z-index: 10;
+    }
 
     .hero-temp-container {
       display: flex;
@@ -267,7 +342,7 @@
       letter-spacing: 0.08em;
     }
 
-    /* === 建議區：小 HUD 卡片 === */
+    /* === 建議區 === */
     .advice-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -279,7 +354,8 @@
 
     .advice-item {
       position: relative;
-      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.18), transparent 65%),
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.18), transparent 65%),
         rgba(5, 12, 30, 0.9);
       border-radius: 20px;
       padding: 12px 10px;
@@ -287,7 +363,7 @@
       text-align: center;
       box-shadow:
         0 0 10px rgba(120, 180, 255, 0.35),
-    0 10px 20px rgba(0, 0, 0, 0.55);
+        0 10px 20px rgba(0, 0, 0, 0.55);
       overflow: hidden;
     }
 
@@ -305,8 +381,8 @@
       font-size: 2.1rem;
       margin-bottom: 4px;
       text-shadow:
-        0 0 8px rgba(255,255,255,0.6),
-    0 0 18px rgba(108,246,255,0.7);
+        0 0 8px rgba(255, 255, 255, 0.6),
+        0 0 18px rgba(108, 246, 255, 0.7);
     }
 
     .advice-text {
@@ -321,7 +397,7 @@
       color: rgba(210, 220, 255, 0.85);
     }
 
-    /* === 稍後預報（下方 HUD 卡片） === */
+    /* === 稍後預報 === */
     .section-title {
       font-size: 1.2rem;
       font-weight: 900;
@@ -355,7 +431,8 @@
       position: relative;
       width: 30%;
       min-width: 170px;
-      background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.14), transparent 65%),
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.14), transparent 65%),
         rgba(8, 14, 32, 0.92);
       border-radius: 22px;
       padding: 18px 16px 16px;
@@ -413,7 +490,7 @@
       color: rgba(210, 220, 255, 0.9);
     }
 
-    /* 宇宙語錄卡片特化 */
+    /* 宇宙語錄卡片 */
     .quote-card {
       text-align: left;
       padding: 18px 18px 16px;
@@ -438,6 +515,23 @@
         padding: 30px 14px 16px;
       }
 
+      .city-switcher {
+        margin-bottom: 12px;
+      }
+
+      .city-tabs {
+    transform: scale(0.92);
+    padding: 4px;
+  }
+  .city-tab {
+    padding: 6px 16px;
+    font-size: 0.88rem;
+  }
+
+      .city-select-wrap {
+        display: block;
+      }
+
       .hero-card {
         padding: 26px 18px 20px;
       }
@@ -454,29 +548,22 @@
         font-size: 3.4rem;
       }
 
-      .mini-card {
-        min-width: 150px;
+      .scroll-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        overflow-x: hidden;
+        padding-right: 0;
       }
 
-       .scroll-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    overflow-x: hidden;
-    padding-right: 0;
-  }
+      .mini-card {
+        width: 100%;
+        min-width: unset;
+      }
 
-  /* 兩欄卡片 */
-  .mini-card {
-    width: 100%;
-    min-width: unset;
-  }
-
-  /* 語錄卡片 — 佔滿整行 */
-  .quote-card {
-    grid-column: 1 / -1; /* 全寬 */
-  }
-
+      .quote-card {
+        grid-column: 1 / -1;
+      }
     }
   </style>
 </head>
@@ -493,12 +580,33 @@
 
   <!-- Status Bar -->
   <div class="status-bar">
-    <div class="location-pill">台北</div>
+    <div class="location-pill" id="locationPill">台北</div>
     <div id="updateTime" class="update-pill">更新中...</div>
   </div>
 
   <!-- Main -->
   <div class="container" id="mainContent" style="display:none;">
+
+    <!-- 城市切換：桌機 Tabs + 手機 Select -->
+    <div class="city-switcher">
+      <!-- 桌機 segment -->
+      <div class="city-tabs" id="cityTabs">
+        <button class="city-tab active" data-city="taipei">台北</button>
+        <button class="city-tab" data-city="newtaipei">新北</button>
+        <button class="city-tab" data-city="kaohsiung">高雄</button>
+      </div>
+
+      <!-- 手機 dropdown -->
+      <!-- <div class="city-select-wrap">
+        <div class="city-select-label">觀測城市</div>
+        <select id="citySelect" class="city-select">
+          <option value="taipei">台北</option>
+          <option value="newtaipei">新北</option>
+          <option value="kaohsiung">高雄</option>
+        </select>
+      </div> -->
+    </div>
+
     <div id="heroCard"></div>
 
     <h3 class="section-title">稍後預報</h3>
@@ -506,61 +614,75 @@
   </div>
 
   <script>
-    const API_URL = "https://douzi-weather.zeabur.app/api/weather/taipei";
+    // 後端 API base
+    const API_BASE = "https://douzi-weather.zeabur.app/api/weather";
+
+    // 城市設定
+    const CITY_CONFIG = {
+      taipei: { label: "台北", path: "taipei" },
+      newtaipei: { label: "新北", path: "newtaipei" },
+      kaohsiung: { label: "高雄", path: "kaohsiung" },
+    };
+
+    let currentCity = "taipei";
+
+    function getApiUrl(cityKey) {
+      const city = CITY_CONFIG[cityKey] || CITY_CONFIG["taipei"];
+      return `${API_BASE}/${city.path}`;
+    }
 
     // 宇宙語錄
     const quotes = [
-        "你不是走慢，是地心引力特別黏你。",
-        "放心，你不是沒效率，你是在宇宙省電模式。",
-        "別急，星星也不是每天都亮。",
-        "你不是累，你是宇宙快沒電，需要插座。",
-        "今天的你沒問題，是這顆星球問題比較多。",
-        "你以為你迷路？沒有，你只是自由軌道運行。",
-        "連黑洞都會累，你現在這樣很正常。",
-        "別覺得進度慢，宇宙膨脹也不急。",
-        "今天不想動？我懂，行星也固定在原地。",
-        "你不是沒動力，你只是太空船暖機比較久。",
-        "別怕，你沒落後，你只是時空差。",
-        "累？合理，你正在承載個人宇宙。",
-        "你沒有變胖，是宇宙膨脹比你快。",
-        "你沒有拖延，你是在等待最好的發射窗口。",
-        "別覺得自己渺小，你比五成星星都亮。",
-        "你不是搞砸，是宇宙給你加戲。",
-        "你很棒，不是我誇張，是宇宙審核通過了。",
-        "別慌，你的宇宙 Wi-Fi 就是不穩，重連一下。",
-        "你不是沒方向，是宇宙指南針正在更新。",
-        "先休息，連彗星都會停一下方向對齊。",
-        "你不是故障，你是進入安全模式保護自己。",
-        "你哪裡不好了？只有心太善良。",
-        "別急著為難自己，宇宙沒在趕你。",
-        "你不是選擇障礙，是平行宇宙太多。",
-        "你不是沒天份，你只是星塵比較害羞。",
-        "別覺得你不配，你是限量版宇宙產物。",
-        "你沒有變慢，是時間曲率影響的。",
-        "今天心情差？正常，人類情緒比黑洞還深。",
-        "你不是懶，是保持能量效率。",
-        "你已經夠努力了，不然星星怎麼都站你那邊？",
-        "別看低自己，你比你想像的更有引力。",
-        "你不是失眠，你的腦在跟宇宙同步時間。",
-        "你不是奇怪，你是稀有天體。",
-        "每天醒來都這麼可愛？宇宙應該升你等級。",
-        "你不是沒用，你是功能太先進，地球規格不支援。",
-        "別懷疑，宇宙真的有偷偷偏心你。",
-        "你努力的樣子，比流星還可愛。",
-        "你現在覺得混亂？星雲就是這樣誕生星星的。",
-        "你不是不行，只是今天重力偏強。",
-        "心累？正常，星體都有磁暴期。",
-        "你不需要比別人強，你本來就很亮。",
-        "你現在的狀態？像宇宙膨脹──慢但無可阻擋。",
-        "你不是沒做好，是宇宙想讓你走更好的版本。",
-        "你以為你撐不住？拜託，你可是星塵組合的高階生命體。",
-        "你覺得亂？宇宙創生初期也亂得跟什麼一樣。",
-        "今天的你沒有虧待宇宙，所以宇宙也不會虧待你。",
-        "你不是麻煩，你是重力場太強大家靠過來。",
-        "你已經很好了，再好就要被宇宙徵召了。",
-        "你現在的步伐剛剛好，宇宙都說 OK。"
+      "你不是走慢，是地心引力特別黏你。",
+      "放心，你不是沒效率，你是在宇宙省電模式。",
+      "別急，星星也不是每天都亮。",
+      "你不是累，你是宇宙快沒電，需要插座。",
+      "今天的你沒問題，是這顆星球問題比較多。",
+      "你以為你迷路？沒有，你只是自由軌道運行。",
+      "連黑洞都會累，你現在這樣很正常。",
+      "別覺得進度慢，宇宙膨脹也不急。",
+      "今天不想動？我懂，行星也固定在原地。",
+      "你不是沒動力，你只是太空船暖機比較久。",
+      "別怕，你沒落後，你只是時空差。",
+      "累？合理，你正在承載個人宇宙。",
+      "你沒有變胖，是宇宙膨脹比你快。",
+      "你沒有拖延，你是在等待最好的發射窗口。",
+      "別覺得自己渺小，你比五成星星都亮。",
+      "你不是搞砸，是宇宙給你加戲。",
+      "你很棒，不是我誇張，是宇宙審核通過了。",
+      "別慌，你的宇宙 Wi-Fi 就是不穩，重連一下。",
+      "你不是沒方向，是宇宙指南針正在更新。",
+      "先休息，連彗星都會停一下方向對齊。",
+      "你不是故障，你是進入安全模式保護自己。",
+      "你哪裡不好了？只有心太善良。",
+      "別急著為難自己，宇宙沒在趕你。",
+      "你不是選擇障礙，是平行宇宙太多。",
+      "你不是沒天份，你只是星塵比較害羞。",
+      "別覺得你不配，你是限量版宇宙產物。",
+      "你沒有變慢，是時間曲率影響的。",
+      "今天心情差？正常，人類情緒比黑洞還深。",
+      "你不是懶，是保持能量效率。",
+      "你已經夠努力了，不然星星怎麼都站你那邊？",
+      "別看低自己，你比你想像的更有引力。",
+      "你不是失眠，你的腦在跟宇宙同步時間。",
+      "你不是奇怪，你是稀有天體。",
+      "每天醒來都這麼可愛？宇宙應該升你等級。",
+      "你不是沒用，你是功能太先進，地球規格不支援。",
+      "別懷疑，宇宙真的有偷偷偏心你。",
+      "你努力的樣子，比流星還可愛。",
+      "你現在覺得混亂？星雲就是這樣誕生星星的。",
+      "你不是不行，只是今天重力偏強。",
+      "心累？正常，星體都有磁暴期。",
+      "你不需要比別人強，你本來就很亮。",
+      "你現在的狀態？像宇宙膨脹──慢但無可阻擋。",
+      "你不是沒做好，是宇宙想讓你走更好的版本。",
+      "你以為你撐不住？拜託，你可是星塵組合的高階生命體。",
+      "你覺得亂？宇宙創生初期也亂得跟什麼一樣。",
+      "今天的你沒有虧待宇宙，所以宇宙也不會虧待你。",
+      "你不是麻煩，你是重力場太強大家靠過來。",
+      "你已經很好了，再好就要被宇宙徵召了。",
+      "你現在的步伐剛剛好，宇宙都說 OK。"
     ];
-
 
     function getWeatherIcon(weather) {
       if (!weather) return "☀️";
@@ -608,7 +730,9 @@
     }
 
     function renderWeather(data) {
-      const forecasts = data.forecasts;
+      const forecasts = data.forecasts || [];
+      if (!forecasts.length) return;
+
       const current = forecasts[0];
       const others = forecasts.slice(1);
 
@@ -627,10 +751,16 @@
       const advice = getAdvice(current.rain, current.maxTemp);
       const period = getTimePeriod(current.startTime);
 
-      document.getElementById("heroCard").innerHTML = `
-        <div class="hero-period">${period}</div>
-            <div class="hero-card">
+      // 更新位置標籤
+      const locationPill = document.getElementById("locationPill");
+      if (locationPill && CITY_CONFIG[currentCity]) {
+        locationPill.textContent = CITY_CONFIG[currentCity].label;
+      }
 
+      // Hero card
+      document.getElementById("heroCard").innerHTML = `
+        <div class="hero-card">
+          <div class="hero-period">${period}</div>
 
           <div class="hero-temp-container">
             <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
@@ -654,6 +784,7 @@
         </div>
       `;
 
+      // 稍後預報卡片
       const container = document.getElementById("futureForecasts");
       container.innerHTML = "";
 
@@ -683,7 +814,7 @@
         </div>
       `;
 
-      // 日期顯示
+      // 更新時間
       const now = new Date();
       const m = now.getMonth() + 1;
       const d = now.getDate();
@@ -692,11 +823,21 @@
         `${m}月${d}日 ${wd[now.getDay()]}`;
     }
 
-    async function fetchWeather() {
+    async function fetchWeather(cityKey = currentCity, options = { showLoading: false }) {
       try {
-        const delay = new Promise(r => setTimeout(r, 1200));
-        const fetcher = fetch(API_URL).then(res => res.json());
-        const [_, json] = await Promise.all([delay, fetcher]);
+        currentCity = cityKey;
+
+        if (options.showLoading) {
+          document.getElementById("loading").style.display = "flex";
+          document.getElementById("mainContent").style.display = "none";
+        } else {
+          document.getElementById("updateTime").textContent = "更新中...";
+        }
+
+        const apiUrl = getApiUrl(cityKey);
+        const delay = new Promise(r => setTimeout(r, options.showLoading ? 1200 : 400));
+        const fetcher = fetch(apiUrl).then(res => res.json());
+        const [, json] = await Promise.all([delay, fetcher]);
 
         if (json.success) {
           renderWeather(json.data);
@@ -711,7 +852,43 @@
       }
     }
 
-    document.addEventListener("DOMContentLoaded", fetchWeather);
+    function setupCitySwitch() {
+      const tabs = document.querySelectorAll(".city-tab");
+      const select = document.getElementById("citySelect");
+
+      tabs.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const city = btn.dataset.city;
+          if (city === currentCity) return;
+
+          tabs.forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+
+          if (select) select.value = city;
+
+          fetchWeather(city, { showLoading: false });
+        });
+      });
+
+      if (select) {
+        select.addEventListener("change", (e) => {
+          const city = e.target.value;
+          if (city === currentCity) return;
+
+          tabs.forEach(b => {
+            b.classList.toggle("active", b.dataset.city === city);
+          });
+
+          fetchWeather(city, { showLoading: false });
+        });
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      setupCitySwitch();
+      // 初次載入：台北 + 顯示 loading 版本
+      fetchWeather("taipei", { showLoading: true });
+    });
   </script>
 </body>
 

@@ -6,10 +6,10 @@
   <meta name="viewport"
         content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>豆子氣象站 · Space HUD</title>
-  <link rel="icon" type="image/png" href="./icon.png">
-  <link rel="apple-touch-icon" href="./icon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="./icon.png">
-  <link rel="apple-touch-icon" href="./icon-v2.png">
+  <link rel="icon" type="image/png" href="assets/img/icon.png">
+  <link rel="apple-touch-icon" href="assets/img/icon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icon.png">
+  <link rel="apple-touch-icon" href="assets/img/icon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,7 +17,9 @@
     href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;700;900&display=swap"
     rel="stylesheet">
 
-  <style>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+  <!-- <style>
     :root {
       --purple-deep: #080c19;
       --purple-mid: #191f33;
@@ -565,55 +567,50 @@
         grid-column: 1 / -1;
       }
     }
-  </style>
+  </style> -->
 </head>
 
 <body>
-  <!-- 前景星塵層 -->
-  <div class="star-layer"></div>
+  <!-- 🌟 星塵層（背景 + 前景） -->
+<div class="star-layer"></div>
 
-  <!-- Loading -->
-  <div id="loading" class="loading-screen">
-    <div class="loading-icon">🛰️</div>
-    <p class="loading-text">雲朵正在連上宇宙氣象中心…</p>
-  </div>
+<!-- 🌌 Loading 畫面 -->
+<div id="loading" class="loading-screen">
+  <div class="loading-icon">🛰️</div>
+  <p class="loading-text">雲朵正在連上宇宙氣象中心…</p>
+</div>
 
-  <!-- Status Bar -->
-  <div class="status-bar">
-    <div class="location-pill" id="locationPill">台北</div>
-    <div id="updateTime" class="update-pill">更新中...</div>
-  </div>
+<!-- 🌙 / 🌞 狀態列：城市 + 更新時間 -->
+<div class="status-bar">
+  <div class="location-pill" id="locationPill">台北</div>
+  <div id="updateTime" class="update-pill">更新中...</div>
+</div>
 
-  <!-- Main -->
-  <div class="container" id="mainContent" style="display:none;">
+<!-- 主內容 -->
+<div class="container" id="mainContent" style="display:none;">
 
-    <!-- 城市切換：桌機 Tabs + 手機 Select -->
-    <div class="city-switcher">
-      <!-- 桌機 segment -->
-      <div class="city-tabs" id="cityTabs">
-        <button class="city-tab active" data-city="taipei">台北</button>
-        <button class="city-tab" data-city="newtaipei">新北</button>
-        <button class="city-tab" data-city="kaohsiung">高雄</button>
-      </div>
-
-      <!-- 手機 dropdown -->
-      <!-- <div class="city-select-wrap">
-        <div class="city-select-label">觀測城市</div>
-        <select id="citySelect" class="city-select">
-          <option value="taipei">台北</option>
-          <option value="newtaipei">新北</option>
-          <option value="kaohsiung">高雄</option>
-        </select>
-      </div> -->
+  <!-- 🌏 城市切換（手機 + 電腦都使用 Segment Tabs） -->
+  <div class="city-switcher">
+    <div class="city-tabs" id="cityTabs">
+      <button class="city-tab active" data-city="taipei">台北</button>
+      <button class="city-tab" data-city="newtaipei">新北</button>
+      <button class="city-tab" data-city="kaohsiung">高雄</button>
     </div>
-
-    <div id="heroCard"></div>
-
-    <h3 class="section-title">稍後預報</h3>
-    <div class="scroll-container" id="futureForecasts"></div>
   </div>
 
-  <script>
+  <!-- ⭐ 今日主要天氣卡片（JS 會寫入） -->
+  <div id="heroCard"></div>
+
+  <!-- 📡 小時預報 -->
+  <h3 class="section-title">稍後預報</h3>
+  <div class="scroll-container" id="futureForecasts"></div>
+
+</div>
+
+
+<script src="assets/js/main.js"></script>
+
+  <!-- <script>
     // 後端 API base
     const API_BASE = "https://douzi-weather.zeabur.app/api/weather";
 
@@ -889,7 +886,7 @@
       // 初次載入：台北 + 顯示 loading 版本
       fetchWeather("taipei", { showLoading: true });
     });
-  </script>
+  </script> -->
 </body>
 
 </html>

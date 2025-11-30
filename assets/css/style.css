@@ -1,0 +1,526 @@
+/* ============================
+   基本色票與 Reset
+============================ */
+:root {
+  --purple-deep: #080c19;
+  --purple-mid: #191f33;
+
+  --hud-line: rgba(200, 214, 255, 0.45);
+
+  --card-bg: rgba(15, 20, 40, 0.72);
+  --card-border: rgba(255, 255, 255, 0.3);
+
+  --text-light: #f4f6ff;
+  --text-dim: #b4b9e4;
+
+  --accent-yellow: #ffe7a6;
+  --accent-blue: #9ed3ff;
+  --accent-pink: #ffb7e1;
+  --accent-neon: #6cf6ff;
+
+  --radius-card: 24px;
+  --radius-pill: 999px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Zen Maru Gothic', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* ============================
+   背景：星雲 + 漸層
+============================ */
+body {
+  background-color: var(--purple-deep);
+  background-image: radial-gradient(circle at 20% 30%, rgba(255, 182, 193, 0.18) 0, transparent 60%),
+    radial-gradient(circle at 80% 20%, rgba(173, 216, 230, 0.22) 0, transparent 65%),
+    radial-gradient(circle at 50% 75%, rgba(221, 160, 221, 0.2) 0, transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(255, 228, 181, 0.18) 0, transparent 60%),
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'>\
+        <circle cx='30' cy='40' r='1.8' fill='white' opacity='0.65'/>\
+        <circle cx='120' cy='70' r='1.4' fill='white' opacity='0.55'/>\
+        <circle cx='200' cy='110' r='1.6' fill='white' opacity='0.60'/>\
+        <circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/>\
+        <circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/>\
+      </svg>");
+  background-size: cover, cover, cover, cover, 240px 240px;
+  background-repeat: repeat;
+  background-attachment: fixed;
+}
+
+/* ================================
+   🌞 白天 / 🌙 夜間背景狀態
+================================ */
+body.daytime {
+  background-color: #100d24;
+  background-image: radial-gradient(circle at 30% 20%, rgba(255, 240, 200, 0.2) 0%, transparent 60%),
+    radial-gradient(circle at 70% 40%, rgba(180, 210, 255, 0.22) 0%, transparent 60%),
+    radial-gradient(circle at 50% 80%, rgba(255, 210, 230, 0.18) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'>\
+        <circle cx='40' cy='50' r='1.6' fill='white' opacity='0.55'/>\
+        <circle cx='140' cy='70' r='1.4' fill='white' opacity='0.45'/>\
+        <circle cx='200' cy='120' r='1.7' fill='white' opacity='0.60'/>\
+        <circle cx='160' cy='200' r='1.2' fill='white' opacity='0.45'/>\
+      </svg>");
+  background-size: cover, cover, cover, 240px 240px;
+  background-repeat: repeat;
+}
+
+body.nighttime {
+  background-color: #080c19;
+  background-image: radial-gradient(
+      circle at 20% 30%,
+      rgba(255, 182, 193, 0.18) 0%,
+      transparent 60%
+    ),
+    radial-gradient(circle at 80% 20%, rgba(173, 216, 230, 0.22) 0%, transparent 65%),
+    radial-gradient(circle at 50% 75%, rgba(221, 160, 221, 0.2) 0%, transparent 60%),
+    radial-gradient(circle at 70% 60%, rgba(255, 228, 181, 0.18) 0%, transparent 60%),
+    url("data:image/svg+xml;utf8,\
+      <svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'>\
+        <circle cx='30' cy='40' r='1.8' fill='white' opacity='0.65'/>\
+        <circle cx='120' cy='70' r='1.4' fill='white' opacity='0.55'/>\
+        <circle cx='200' cy='110' r='1.6' fill='white' opacity='0.60'/>\
+        <circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/>\
+      </svg>");
+  background-size: cover, cover, cover, cover, 240px 240px;
+  background-repeat: repeat;
+}
+
+/* ============================
+   前景星塵漂浮層
+============================ */
+.star-layer {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+
+  background-image: url("data:image/svg+xml;utf8,\
+    <svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'>\
+      <circle cx='30' cy='40' r='1.7' fill='white' opacity='0.75'/>\
+      <circle cx='120' cy='80' r='1.3' fill='white' opacity='0.55'/>\
+      <circle cx='200' cy='120' r='1.5' fill='white' opacity='0.60'/>\
+      <circle cx='150' cy='180' r='1.1' fill='white' opacity='0.45'/>\
+      <circle cx='60' cy='150' r='1.3' fill='white' opacity='0.55'/>\
+      <circle cx='180' cy='30' r='1.2' fill='white' opacity='0.50'/>\
+    </svg>");
+  background-size: 240px 240px;
+  opacity: 0.42;
+  animation: star-drift 48s linear infinite;
+}
+
+@keyframes star-drift {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 240px 240px;
+  }
+}
+
+/* ============================
+   Loading 畫面
+============================ */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+
+  background: radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.05) 0, transparent 55%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.06) 0, transparent 60%), #060814dd;
+  backdrop-filter: blur(8px);
+}
+
+.loading-icon {
+  font-size: 4.2rem;
+  animation: float 2.4s ease-in-out infinite;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  filter: drop-shadow(0 0 22px rgba(120, 200, 255, 0.8));
+}
+
+.loading-text {
+  margin-top: 18px;
+  font-size: 1.05rem;
+  color: #f0f2ff;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+/* 浮動動畫 */
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* ============================
+   頂端狀態列
+============================ */
+.status-bar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 20px;
+  background: linear-gradient(to bottom, rgba(5, 7, 16, 0.85), rgba(5, 7, 16, 0.45));
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(190, 207, 255, 0.35);
+}
+
+/* 地點 Pill */
+.location-pill {
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.1));
+  padding: 6px 16px;
+  border-radius: var(--radius-pill);
+  color: #1a1a22;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 800;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+}
+
+.location-pill::before {
+  content: '●';
+  color: #ff5c71;
+  filter: drop-shadow(0 0 7px rgba(255, 92, 113, 0.9));
+}
+
+/* 更新時間 Pill */
+.update-pill {
+  font-size: 0.85rem;
+  color: var(--text-dim);
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  background: rgba(12, 18, 32, 0.85);
+  border: 1px solid rgba(180, 192, 255, 0.7);
+  box-shadow: 0 0 12px rgba(120, 160, 255, 0.4);
+}
+
+/* ============================
+   主容器
+============================ */
+.container {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  padding: 20px 20px 32px;
+  margin: 0 auto;
+}
+
+/* ============================
+   城市切換 Tabs（桌機 & 手機都用）
+============================ */
+.city-switcher {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0 24px;
+}
+
+.city-tabs {
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 30px;
+
+  background: rgba(5, 7, 16, 0.82);
+  border: 1px solid rgba(190, 207, 255, 0.45);
+
+  box-shadow: 0 0 12px rgba(120, 160, 255, 0.35), 0 12px 26px rgba(0, 0, 0, 0.55);
+}
+
+.city-tab {
+  border: none;
+  background: transparent;
+  padding: 6px 18px;
+  border-radius: var(--radius-pill);
+  color: var(--text-dim);
+
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease-out;
+}
+
+.city-tab:hover {
+  color: #ffffff;
+}
+
+.city-tab.active {
+  background: radial-gradient(circle at 20% 0%, #fff7d4, #ffd2f0);
+  color: #2b2330;
+
+  box-shadow: 0 0 12px rgba(255, 244, 210, 0.9), 0 0 22px rgba(255, 190, 230, 0.9);
+}
+
+/* ============================
+   主要天氣卡片（Hero）
+============================ */
+.hero-card {
+  position: relative;
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
+    radial-gradient(circle at 80% 100%, rgba(144, 211, 255, 0.22), transparent 60%), var(--card-bg);
+
+  border-radius: 28px;
+  padding: 30px 26px 26px;
+  text-align: center;
+
+  border: 1px solid var(--card-border);
+  box-shadow: 0 0 18px rgba(125, 175, 255, 0.25), 0 0 42px rgba(120, 80, 255, 0.25);
+}
+
+/* 時段標籤 */
+.hero-period {
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  padding: 4px 22px;
+  background: var(--accent-yellow);
+  border-radius: 16px;
+
+  border: 2px solid white;
+  font-weight: 700;
+  font-size: 0.92rem;
+  color: #2f2d26;
+
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25), 0 0 12px rgba(255, 220, 150, 0.55);
+}
+
+/* 溫度 */
+.hero-temp-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin: 32px 0 4px;
+}
+
+.hero-icon {
+  font-size: 4.4rem;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.75), 0 0 36px rgba(255, 215, 160, 0.75);
+  animation: float 3.2s ease-in-out infinite;
+}
+
+.hero-temp {
+  font-size: 4.2rem;
+  font-weight: 900;
+  color: var(--text-light);
+  letter-spacing: 0.04em;
+
+  text-shadow: 0 0 14px rgba(255, 255, 255, 0.65), 0 0 36px rgba(140, 200, 255, 0.85);
+}
+
+.hero-desc {
+  font-size: 1.2rem;
+  margin-top: 6px;
+  color: var(--text-dim);
+}
+
+/* ============================
+   天氣建議卡片
+============================ */
+.advice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 28px;
+  padding-top: 16px;
+
+  border-top: 1px dashed rgba(190, 205, 255, 0.55);
+}
+
+.advice-item {
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.18), transparent 65%),
+    rgba(5, 12, 30, 0.9);
+
+  padding: 12px 10px;
+  text-align: center;
+
+  border: 1px solid rgba(200, 212, 255, 0.6);
+  border-radius: 20px;
+
+  box-shadow: 0 0 10px rgba(120, 180, 255, 0.32), 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.advice-icon {
+  font-size: 2.1rem;
+  margin-bottom: 4px;
+}
+
+.advice-text {
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.advice-sub {
+  font-size: 0.78rem;
+  margin-top: 2px;
+  color: rgba(210, 220, 255, 0.85);
+}
+
+/* ============================
+   稍後預報（Mini Cards）
+============================ */
+.section-title {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--text-light);
+  margin-top: 24px;
+  margin-bottom: 12px;
+  letter-spacing: 0.1em;
+}
+
+.section-title::before {
+  content: '▌';
+  margin-right: 6px;
+  color: var(--accent-neon);
+}
+
+.scroll-container {
+  display: flex;
+  justify-content: space-around;
+  overflow-x: auto;
+  gap: 16px;
+  padding: 12px 2px;
+  scrollbar-width: none;
+}
+.scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+.mini-card {
+  width: 30%;
+  min-width: 170px;
+  padding: 16px 16px 14px;
+
+  background: radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.14), transparent 65%),
+    rgba(8, 14, 32, 0.92);
+
+  border-radius: 22px;
+  text-align: center;
+  flex-shrink: 0;
+
+  border: 1px solid rgba(200, 210, 255, 0.6);
+  box-shadow: 0 0 12px rgba(125, 190, 255, 0.32), 0 5px 15px rgba(0, 0, 0, 0.55);
+
+  backdrop-filter: blur(10px);
+}
+
+.mini-time {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 4px 14px;
+  background: rgba(255, 255, 255, 0.75);
+  color: #242026;
+
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 0.85rem;
+
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.mini-icon {
+  margin-top: 6px;
+  font-size: 2.2rem;
+  text-shadow: 0 0 12px rgba(255, 255, 255, 0.75), 0 0 24px rgba(108, 246, 255, 0.85);
+}
+
+.mini-temp {
+  margin-top: 8px;
+  font-size: 1.12rem;
+  font-weight: 700;
+  color: var(--text-light);
+}
+
+.mini-rain {
+  margin-top: 4px;
+  font-size: 0.78rem;
+  color: rgba(210, 220, 255, 0.9);
+}
+
+/* 宇宙語錄卡 */
+.quote-card {
+  text-align: left;
+  padding: 18px 18px 16px;
+}
+
+.quote-text {
+  margin-top: 6px;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #ffffff;
+}
+
+/* ============================
+   手機 RWD
+============================ */
+@media (max-width: 480px) {
+  .container {
+    padding: 18px 14px 28px;
+  }
+
+  .city-tabs {
+    transform: scale(0.92);
+    padding: 4px;
+  }
+
+  .city-tab {
+    font-size: 0.88rem;
+    padding: 6px 14px;
+  }
+
+  /* Hero */
+  .hero-card {
+    padding: 26px 18px 20px;
+  }
+
+  .hero-temp {
+    font-size: 3.6rem;
+  }
+
+  .hero-icon {
+    font-size: 3.4rem;
+  }
+
+  /* Mini Cards 改成 2 欄 */
+  .scroll-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    overflow-x: hidden;
+  }
+
+  .mini-card {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .quote-card {
+    grid-column: 1 / -1;
+  }
+}

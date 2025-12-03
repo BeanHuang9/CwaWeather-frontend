@@ -368,14 +368,13 @@ body.nighttime {
 }
 
 .aqi-title {
-  font-size: 1.12rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-light);
-  margin-top: 4px;
 }
 
 .aqi-value {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   margin-top: 2px;
   color: rgba(210,220,255,0.85);
 }

@@ -317,13 +317,13 @@ body.nighttime {
 }
 
 .hero-icon {
-  font-size: 4.4rem;
+  font-size: 3rem;
   text-shadow: 0 0 20px rgba(255, 255, 255, 0.75), 0 0 36px rgba(255, 215, 160, 0.75);
   animation: float 3.2s ease-in-out infinite;
 }
 
 .hero-temp {
-  font-size: 4.2rem;
+  font-size: 3rem;
   font-weight: 900;
   color: var(--text-light);
   letter-spacing: 0.04em;
@@ -332,7 +332,7 @@ body.nighttime {
 }
 
 .hero-desc {
-  font-size: 1.2rem;
+  font-size: 1rem;
   margin-top: 6px;
   color: var(--text-dim);
 }
@@ -400,7 +400,7 @@ body.nighttime {
 }
 
 .advice-text {
-  font-size: 1.12rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-light);
 }
@@ -430,19 +430,17 @@ body.nighttime {
 }
 
 .scroll-container {
-  display: flex;
-  justify-content: space-around;
-  overflow-x: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
   padding: 12px 2px;
-  scrollbar-width: none;
 }
 .scroll-container::-webkit-scrollbar {
   display: none;
 }
 
 .mini-card {
-  width: 30%;
+  width: 100%;
   min-width: 170px;
   padding: 16px 16px 14px;
 
@@ -483,7 +481,7 @@ body.nighttime {
 
 .mini-temp {
   margin-top: 8px;
-  font-size: 1.12rem;
+  font-size: 1rem;
   font-weight: 700;
   color: var(--text-light);
 }
@@ -497,11 +495,11 @@ body.nighttime {
 /* 宇宙語錄卡 */
 .quote-card {
   text-align: left;
-  padding: 18px 18px 16px;
+  padding: 18px 18px 16px;grid-column: 1 / -1;
 }
 
 .quote-text {
-  margin-top: 6px;
+  margin-top: 1rem;
   font-size: 0.95rem;
   line-height: 1.6;
   color: #ffffff;

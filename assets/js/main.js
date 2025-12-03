@@ -4,9 +4,9 @@
 const API_BASE = 'https://douzi-weather.zeabur.app/api/weather';
 
 const CITY_CONFIG = {
-  taipei: { label: '台北', path: 'taipei' },
-  newtaipei: { label: '新北', path: 'newtaipei' },
-  kaohsiung: { label: '高雄', path: 'kaohsiung' },
+  taipei: { label: '臺北市', path: 'taipei' },
+  newtaipei: { label: '新北市', path: 'newtaipei' },
+  kaohsiung: { label: '高雄市', path: 'kaohsiung' },
 };
 
 let currentCity = 'taipei';
@@ -111,11 +111,11 @@ function getAdvice(rainProb, maxTemp) {
   let clothText = '艙內體感舒適';
 
   if (!isNaN(maxNumber) && maxNumber >= 28) {
-    clothIcon = '☀️';
-    clothText = '適合清爽輕裝';
+    clothIcon = '🛸';
+    clothText = '適合輕盈太空服';
   } else if (!isNaN(maxNumber) && maxNumber <= 20) {
-    clothIcon = '🧥';
-    clothText = '外套可以準備好';
+    clothIcon = '🧊';
+    clothText = '艙外溫度偏低';
   }
 
   return { rainIcon, rainText, clothIcon, clothText };
@@ -133,10 +133,67 @@ function getTimePeriod(startTime) {
   return '深夜';
 }
 
+// =============================
+// 🌬️ AQI — 空氣品質 API
+// =============================
+async function loadAQI(cityLabel) {
+  const API_KEY = 'cc3ea583-e037-4b1a-abe0-4a60a0dfb728';
+  const url = `https://data.moenv.gov.tw/api/v2/aqx_p_432?limit=1000&api_key=${API_KEY}`;
+
+  try {
+    const res = await fetch(url);
+    const json = await res.json();
+
+    // 🔍 county 忽略台/臺，改用 includes + 替換
+    const normalizedLabel = cityLabel.replace('台', '臺');
+
+    const list = json.records.filter(
+      (r) => r.county && r.county.replace('台', '臺').includes(normalizedLabel)
+    );
+
+    if (!list.length) {
+      return { aqi: '--', status: '無測站', icon: '❓' };
+    }
+
+    const s = list[0];
+
+    return {
+      aqi: s.aqi || '--',
+      status: s.status || '--',
+      icon: getAQIIcon(s.aqi),
+    };
+  } catch (err) {
+    console.error(err);
+    return { aqi: '--', status: '取得失敗', icon: '💨' };
+  }
+}
+
+// AQI 顏色
+function getAQIColor(aqi) {
+  aqi = Number(aqi);
+  if (aqi <= 50) return '#2ecc71';
+  if (aqi <= 100) return '#f1c40f';
+  if (aqi <= 150) return '#e67e22';
+  if (aqi <= 200) return '#e74c3c';
+  if (aqi <= 300) return '#9b59b6';
+  return '#7e1f1f';
+}
+
+function getAQIIcon(aqi) {
+  aqi = Number(aqi);
+
+  if (aqi <= 50) return '🌳'; // 良好
+  if (aqi <= 100) return '🌱'; // 普通
+  if (aqi <= 150) return '😷'; // 對敏感族群不健康
+  if (aqi <= 200) return '🚨'; // 不健康
+  if (aqi <= 300) return '⛔'; // 非常不健康
+  return '☠️'; // 危害
+}
+
 // ============================================
-// 畫面渲染
+// 🌤️ 主畫面渲染（含 AQI）
 // ============================================
-function renderWeather(data) {
+async function renderWeather(data) {
   const forecasts = data.forecasts || [];
   if (!forecasts.length) return;
 
@@ -149,7 +206,7 @@ function renderWeather(data) {
   let avgTemp = '--';
   if (!isNaN(max) && !isNaN(min)) {
     avgTemp = Math.round((max + min) / 2);
-  } else if (!isNaNaN(max)) {
+  } else if (!isNaN(max)) {
     avgTemp = max;
   } else if (!isNaN(min)) {
     avgTemp = min;
@@ -158,37 +215,52 @@ function renderWeather(data) {
   const advice = getAdvice(current.rain, current.maxTemp);
   const period = getTimePeriod(current.startTime);
 
-  // 更新城市泡泡
+  // ⭐ 取得 AQI 資料
+  const aqiData = await loadAQI(CITY_CONFIG[currentCity].label);
+
+  // 更新城市名稱
   document.getElementById('locationPill').textContent = CITY_CONFIG[currentCity].label;
 
-  // 主卡片
+  // ⭐ 主要卡片 HTML（含第三張 AQI 卡）
   document.getElementById('heroCard').innerHTML = `
-      <div class="hero-card">
-        <div class="hero-period">${period}</div>
+    <div class="hero-card">
+      <div class="hero-period">${period}</div>
 
-        <div class="hero-temp-container">
-          <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
-          <div class="hero-temp">${avgTemp}°</div>
-        </div>
-
-        <div class="hero-desc">${current.weather}</div>
-
-        <div class="advice-grid">
-          <div class="advice-item">
-            <div class="advice-icon">${advice.rainIcon}</div>
-            <div class="advice-text">${advice.rainText}</div>
-            <div class="advice-sub">降雨率 ${current.rain}</div>
-          </div>
-          <div class="advice-item">
-            <div class="advice-icon">${advice.clothIcon}</div>
-            <div class="advice-text">${advice.clothText}</div>
-            <div class="advice-sub">最高溫 ${current.maxTemp}</div>
-          </div>
-        </div>
+      <div class="hero-temp-container">
+        <div class="hero-icon">${getWeatherIcon(current.weather)}</div>
+        <div class="hero-temp">${avgTemp}°</div>
       </div>
-    `;
 
-  // 下方預報
+      <div class="hero-desc">${current.weather}</div>
+
+      <div class="advice-grid">
+
+        <div class="advice-item">
+          <div class="advice-icon">${advice.rainIcon}</div>
+          <div class="advice-text">${advice.rainText}</div>
+          <div class="advice-sub">降雨率 ${current.rain}</div>
+        </div>
+
+        <div class="advice-item">
+          <div class="advice-icon">${advice.clothIcon}</div>
+          <div class="advice-text">${advice.clothText}</div>
+          <div class="advice-sub">最高溫 ${current.maxTemp}</div>
+        </div>
+
+        <div class="aqi-item">
+            <div class="advice-icon">${aqiData.icon}</div>
+            <div class="aqi-title">AQI ${aqiData.aqi}</div>
+            <div class="aqi-value">${aqiData.status}</div>
+        </div>
+
+
+      </div>
+    </div>
+  `;
+
+  // =============================
+  // 下方稍後預報
+  // =============================
   const container = document.getElementById('futureForecasts');
   container.innerHTML = '';
 
@@ -200,27 +272,27 @@ function renderWeather(data) {
     if (d.getDate() !== todayDate) p = '明天' + p;
 
     container.innerHTML += `
-        <div class="mini-card">
-          <div class="mini-time">${p}</div>
-          <div class="mini-icon">${getWeatherIcon(f.weather)}</div>
-          <div class="mini-temp">${f.minTemp}° - ${f.maxTemp}</div>
-          <div class="mini-rain">💧 ${f.rain}</div>
-        </div>
-      `;
+      <div class="mini-card">
+        <div class="mini-time">${p}</div>
+        <div class="mini-icon">${getWeatherIcon(f.weather)}</div>
+        <div class="mini-temp">${f.minTemp}° - ${f.maxTemp}</div>
+        <div class="mini-rain">💧 ${f.rain}</div>
+      </div>
+    `;
   });
 
   // 宇宙語錄
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
   container.innerHTML += `
-      <div class="mini-card quote-card">
-        <div class="mini-time">🌠 宇宙語錄</div>
-        <div class="quote-text">${randomQuote}</div>
-      </div>
-    `;
+    <div class="mini-card quote-card">
+      <div class="mini-time">🌠 宇宙語錄</div>
+      <div class="quote-text">${randomQuote}</div>
+    </div>
+  `;
 
-  // ============================================
-  // ⏰ 更新時間（加入：21:46）
-  // ============================================
+  // =============================
+  // ⏰ 更新時間
+  // =============================
   const now = new Date();
   const m = now.getMonth() + 1;
   const d = now.getDate();
@@ -254,7 +326,7 @@ async function fetchWeather(cityKey = currentCity, options = { showLoading: fals
     const [, json] = await Promise.all([delay, fetcher]);
 
     if (json.success) {
-      renderWeather(json.data);
+      await renderWeather(json.data);
 
       document.getElementById('loading').style.display = 'none';
       document.getElementById('mainContent').style.display = 'block';
@@ -290,10 +362,8 @@ function setupCityTabs() {
 // 初始化
 // ============================================
 document.addEventListener('DOMContentLoaded', () => {
-  // 先套用日夜背景
   applyDayNightBackground();
 
-  // 監聽 Loading 結束後再套一次（避免 Loading 覆蓋掉）
   const observer = new MutationObserver(() => {
     if (document.getElementById('mainContent').style.display === 'block') {
       applyDayNightBackground();

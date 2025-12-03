@@ -7,6 +7,7 @@ const CITY_CONFIG = {
   taipei: { label: '臺北市', path: 'taipei' },
   newtaipei: { label: '新北市', path: 'newtaipei' },
   kaohsiung: { label: '高雄市', path: 'kaohsiung' },
+  tainan: { label: '臺南市', path: 'tainan' },
 };
 
 let currentCity = 'taipei';
